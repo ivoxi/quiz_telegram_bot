@@ -7,3 +7,4 @@ PERM II QUIZ-BOT
 
 `pip install -r requirements.txt`
 `python main.py` ИЛИ просто run в pycharm
+создайте файл config.py, в нем константу TOKEN, в которую запишите токен
