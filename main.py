@@ -1,3 +1,5 @@
+import time
+
 import telebot
 from config import TOKEN
 from question import Question
@@ -62,6 +64,8 @@ def restart_message(message):
                        f"ответа:\n") + \
                       '\n'.join([f"{i + 1}. {question.answers[i]}" for i in range(len(question.answers))])
         bot.send_message(user_id, out_message, reply_markup=keyboard, parse_mode="Markdown")
+        STARTED_QUIZ_USERS[user_id]['current_q_num'] += 1
+        STARTED_QUIZ_USERS[user_id]['questions'].remove(question_id)
 
 
 @bot.callback_query_handler(func=lambda call: True)
@@ -105,6 +109,12 @@ def handle_call(call):
         if call.data == 'start':
             bot.send_message(user_id, out_message, reply_markup=keyboard, parse_mode="Markdown")
         elif call.data in [f'a_{'123456789'[i]}' for i in range(9)]:
+            download_message = 'Загрузка следующего вопроса\n██████▁▁▁▁▁▁ 50%\n\n\n\n\n\n'
+            bot.edit_message_text(download_message, user_id, message_id, reply_markup=None)
+            time.sleep(0.05)
+            download_message = 'Загрузка следующего вопроса\n████████████▇ 99%\n\n\n\n\n\n'
+            bot.edit_message_text(download_message, user_id, message_id, reply_markup=None)
+            bot.edit_message_text('Загрузка следующего вопроса\n██████████ 100%\n\n\n\n\n\n', user_id, message_id, reply_markup=None)
             bot.edit_message_text(out_message, user_id, message_id, reply_markup=keyboard, parse_mode="Markdown")
 
         STARTED_QUIZ_USERS[user_id]['current_q_num'] += 1
